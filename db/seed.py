@@ -1,12 +1,10 @@
-from pg8000.native import Connection
+from db.connection import db
 import json
 
 
 def seed_db():
     print("\U0001FAB4", "Seeding Database...")
-    db = Connection(
-        'postgres'
-    )
+
     db.run("DROP TABLE if exists treasures")
     db.run("DROP TABLE if exists shops")
 
