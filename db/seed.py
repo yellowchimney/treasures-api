@@ -27,7 +27,7 @@ def seed_db():
         )'
     )
 
-    with open('data/dev-data/shops.json', 'r') as file:
+    with open('data/test-data/shops.json', 'r') as file:
         SHOPS_DATA = json.load(file)
         ROWS = SHOPS_DATA['shops']
         row_count = 0
@@ -47,7 +47,7 @@ def seed_db():
     SHOPS = db.run('SELECT * FROM shops')
     SHOP_IDS = {shop[1]: shop[0] for shop in SHOPS}
 
-    with open('data/dev-data/treasures.json', 'r') as file:
+    with open('data/test-data/treasures.json', 'r') as file:
         TREASURES_DATA = json.load(file)
         ROWS = TREASURES_DATA['treasures']
         row_count = 0
