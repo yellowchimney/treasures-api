@@ -77,7 +77,7 @@ def seed_db():
             )
             row_count += 1
         print(
-            f'\U0001F4BE Successfully seeded {row_count} rows to `shops` \
+            f'\U0001F4BE Successfully seeded {row_count} rows to `treasures` \
 table in the database. \U0001F44D')
 
     db.close()
