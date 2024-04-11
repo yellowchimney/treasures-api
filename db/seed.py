@@ -1,9 +1,10 @@
-from db.connection import db
+from db.connection import connect_to_db
 import json
 
 
 def seed_db():
     print("\U0001FAB4", "Seeding Database...")
+    db = connect_to_db()
 
     db.run("DROP TABLE if exists treasures")
     db.run("DROP TABLE if exists shops")

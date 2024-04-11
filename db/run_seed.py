@@ -3,10 +3,8 @@ for the `Cat's Rare Treasures` FastAPI app.'''
 from seed import seed_db
 
 
-def main() -> None:
-    '''This function runs the `seed_db` function'''
+try:
     seed_db()
-
-
-if __name__ == "__main__":
-    main()
+except Exception as e:
+    print(e)
+    raise e
