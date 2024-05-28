@@ -2,10 +2,9 @@ from db.connection import connect_to_db
 import json
 
 
-def seed_db():
+def seed_db(env='test'):
     print("\U0001FAB4", "Seeding Database...")
     db = connect_to_db()
-
     db.run("DROP TABLE if exists treasures")
     db.run("DROP TABLE if exists shops")
 
@@ -28,7 +27,7 @@ def seed_db():
         )'
     )
 
-    with open('data/test-data/shops.json', 'r') as file:
+    with open(f'data/{env}-data/shops.json', 'r') as file:
         SHOPS_DATA = json.load(file)
         ROWS = SHOPS_DATA['shops']
         row_count = 0
@@ -48,7 +47,7 @@ def seed_db():
     SHOPS = db.run('SELECT * FROM shops')
     SHOP_IDS = {shop[1]: shop[0] for shop in SHOPS}
 
-    with open('data/test-data/treasures.json', 'r') as file:
+    with open(f'data/{env}-data/treasures.json', 'r') as file:
         TREASURES_DATA = json.load(file)
         ROWS = TREASURES_DATA['treasures']
         row_count = 0
@@ -75,6 +74,7 @@ def seed_db():
                 cost_at_auction=ROW_VALUES['cost_at_auction'],
                 shop_id=ROW_VALUES['shop_id']
             )
+
             row_count += 1
         print(
             f'\U0001F4BE Successfully seeded {row_count} rows to `treasures` \
