@@ -42,17 +42,19 @@ class TestGetTreasures:
         assert age_list == sorted_age_list
 
 class TestSortedTreasure:
-    def test_200_gets_sorted_returns_in_ascending_ord(self,client):
+    def test_200_gets_sorted_by_age_returns_in_ascending_ord(self,client):
         response = client.get('/api/treasures?sort_by=age')
         body = response.json()
         age_list = [treasure['age'] for treasure in body['treasure']]
         sorted_age_list = sorted(age_list)
         assert age_list == sorted_age_list 
+    def test_200_gets_sorted_by_cost_returns_in_ascending_ord(self,client):
         response = client.get('/api/treasures?sort_by=cost_at_auction')
         body = response.json()
         cost_list = [treasure['cost_at_auction'] for treasure in body['treasure']]
         sorted_cost_list = sorted(cost_list)
         assert cost_list == sorted_cost_list 
+    def test_200_gets_sorted_by_name_returns_in_ascending_ord(self,client):
         response = client.get('/api/treasures?sort_by=treasure_name')
         body = response.json()
         name_list = [treasure['treasure_name'] for treasure in body['treasure']]
