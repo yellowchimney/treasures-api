@@ -61,3 +61,79 @@ class TestSortedTreasure:
         sorted_name_list = sorted(name_list)
         assert name_list == sorted_name_list 
 
+    def test_200_gets_sorted_by_age_returns_in_descending_ord(self,client):
+        response = client.get('/api/treasures?sort_by=age&order=desc')
+        body = response.json()
+        age_list = [treasure['age'] for treasure in body['treasure']]
+        sorted_age_list = sorted(age_list,reverse=True)
+        assert age_list == sorted_age_list 
+    def test_200_gets_sorted_by_cost_returns_in_descending_ord(self,client):
+        response = client.get('/api/treasures?sort_by=cost_at_auction&order=desc')
+        body = response.json()
+        cost_list = [treasure['cost_at_auction'] for treasure in body['treasure']]
+        sorted_cost_list = sorted(cost_list, reverse=True)
+        assert cost_list == sorted_cost_list 
+    def test_200_gets_sorted_by_name_returns_in_descending_ord(self,client):
+        response = client.get('/api/treasures?sort_by=treasure_name&order=desc')
+        body = response.json()
+        name_list = [treasure['treasure_name'] for treasure in body['treasure']]
+        sorted_name_list = sorted(name_list,reverse=True)
+        assert name_list == sorted_name_list 
+
+    def test_gets_colour_only_requests(self,client):
+        response = client.get('/api/treasures?colour=gold')
+        body = response.json()
+        expected = {
+	"treasure": [
+		{
+			"treasure_id": 3,
+			"treasure_name": "treasure-b",
+			"colour": "gold",
+			"age": 13,
+			"cost_at_auction": 500.0,
+			"shop": "shop-f"
+		},
+		{
+			"treasure_id": 10,
+			"treasure_name": "treasure-c",
+			"colour": "gold",
+			"age": 13,
+			"cost_at_auction": 15.99,
+			"shop": "shop-c"
+		}
+	]
+}
+        assert body == expected
+    
+    def test_returns_sort_by_and_colour_requests(self,client):
+        response = client.get('/api/treasures?sort_by=age&colour=gold')
+        body = response.json()
+        age_list = [treasure['age'] for treasure in body['treasure']]
+        sorted_age_list = sorted(age_list)
+        print(sorted_age_list)
+        for treasure in body['treasure']:
+            print(treasure)
+            assert treasure['colour'] == 'gold'
+        assert age_list == sorted_age_list 
+
+    def test_returns_sort_by_and_order_requests_with_colour(self,client):
+        response = client.get('/api/treasures?sort_by=treasure_name&order=desc&colour=gold')
+        body = response.json()
+        name_list = [treasure['treasure_name'] for treasure in body['treasure']]
+        sorted_name_list = sorted(name_list, reverse=True)
+        for treasure in body['treasure']:
+            assert treasure['colour'] == 'gold'
+        assert name_list == sorted_name_list 
+
+class TestPostTreasure:
+    def test_returns_201(self,client):
+        response = client.post('/api/treasures', json = {
+      "treasure_name": "treasure-g",
+      "colour": "gold",
+      "age": 15,
+      "cost_at_auction": "56.00",
+      "shop_id": 3
+    })
+        body = response.json()
+    
+        assert response.status_code == 201
