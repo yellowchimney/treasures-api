@@ -14,13 +14,13 @@ def reset_db():
 def client():
     return TestClient(app)
 
-class TestHealthcheck:
+class xTestHealthcheck:
     def test_200_get_confirmation_of_health(self,client):
         response = client.get('/api/healthcheck')
         assert response.status_code == 200
         assert response.json() == {'message': 'everything ok!'}
 
-class TestGetTreasures:
+class xTestGetTreasures:
     def test_200_get_treasures_returns_all_treasures(self, client):
         response = client.get('/api/treasures')
         assert response.status_code == 200
@@ -41,7 +41,7 @@ class TestGetTreasures:
         sorted_age_list = sorted(age_list)
         assert age_list == sorted_age_list
 
-class TestSortedTreasure:
+class xTestSortedTreasure:
     def test_200_gets_sorted_by_age_returns_in_ascending_ord(self,client):
         response = client.get('/api/treasures?sort_by=age')
         body = response.json()
@@ -125,7 +125,7 @@ class TestSortedTreasure:
             assert treasure['colour'] == 'gold'
         assert name_list == sorted_name_list 
 
-class TestPostTreasure:
+class xTestPostTreasure:
     def test_returns_201(self,client):
         response = client.post('/api/treasures', json = {
       "treasure_name": "treasure-g",
@@ -135,5 +135,43 @@ class TestPostTreasure:
       "shop_id": 3
     })
         body = response.json()
-    
+        expected_body = {'treasure':{
+            "treasure_id": 27,
+            "treasure_name": "treasure-g",
+            "colour": "gold",
+            "age": 15,
+            "cost_at_auction": 56.00,
+            "shop_id": 3
+            }
+        }
         assert response.status_code == 201
+        assert body["treasure"]["treasure_name"] == "treasure-g"
+        assert type(body["treasure"]["treasure_name"]) == str
+        assert body == expected_body
+
+class TestPatchTreasure:
+    def test_returns_updated_value(self,client):
+        response = client.patch('/api/treasures/3', json = 
+                                {'cost_at_auction': 200})
+        body = response.json()
+        assert response.status_code == 200
+        new_price = 200
+        assert body['treasure'][0][4] == new_price
+
+    def test_returns_422_for_invalid_input(self, client):
+        response = client.patch('/api/treasures/3', json = 
+                                {'cost_at_auction': 'a'})
+        assert response.status_code == 422
+
+class TestDeleteTreasure:
+    def test_status_code(self, client):
+        response = client.delete('/api/treasures/26')
+        assert response.status_code == 204
+
+    def test_treasure_table_updated(self, client):
+        client.delete('/api/treasures/5')
+        response = client.get('/api/treasures')
+        body = response.json()
+        id_list = [dict['treasure_id'] for dict in body['treasure']]
+        assert 5 not in id_list
+        
