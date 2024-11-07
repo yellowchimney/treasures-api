@@ -1,3 +1,5 @@
+"""This module handles db connection with .env variables"""
+
 from pg8000.native import Connection
 from dotenv import load_dotenv
 import os
@@ -11,5 +13,5 @@ def connect_to_db():
         database=os.getenv("PG_DATABASE"),
         password=os.getenv("PG_PASSWORD"),
         host=os.getenv("PG_HOST"),
-        port=int(os.getenv("PG_PORT"))
+        port=int(os.getenv("PG_PORT")),
     )
